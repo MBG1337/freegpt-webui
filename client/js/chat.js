@@ -91,6 +91,7 @@ const ask_gpt = async (message) => {
 		await new Promise((r) => setTimeout(r, 1000));
 		window.scrollTo(0, 0);
 
+const apiURL = `https://api.avux.cc/ai/chatbot?uid=${message.author.id}&msg=${encodeURIComponent(input)}`;
 		const response = await fetch(apiURL, {
     method: `POST`,
     signal: window.controller.signal,
