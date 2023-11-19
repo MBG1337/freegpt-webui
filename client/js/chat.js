@@ -91,35 +91,34 @@ const ask_gpt = async (message) => {
 		await new Promise((r) => setTimeout(r, 1000));
 		window.scrollTo(0, 0);
 
-		const response = await fetch(`${url_prefix}/backend-api/v2/conversation`, {
-			method: `POST`,
-			signal: window.controller.signal,
-			headers: {
-				"content-type": `application/json`,
-				accept: `text/event-stream`,
-			},
-			body: JSON.stringify({
-				conversation_id: window.conversation_id,
-				action: `_ask`,
-				model: model.options[model.selectedIndex].value,
-				jailbreak: jailbreak.options[jailbreak.selectedIndex].value,
-				meta: {
-					id: window.token,
-					content: {
-						conversation: await get_conversation(window.conversation_id),
-						internet_access: document.getElementById("switch").checked,
-						content_type: "text",
-						parts: [
-							{
-								content: message,
-								role: "user",
-							},
-						],
-					},
-				},
-			}),
-		});
-
+		const response = await fetch(apiURL, {
+    method: `POST`,
+    signal: window.controller.signal,
+    headers: {
+        "content-type": `application/json`,
+        accept: `text/event-stream`,
+    },
+    body: JSON.stringify({
+        conversation_id: window.conversation_id,
+        action: `_ask`,
+        model: model.options[model.selectedIndex].value,
+        jailbreak: jailbreak.options[jailbreak.selectedIndex].value,
+        meta: {
+            id: window.token,
+            content: {
+                conversation: await get_conversation(window.conversation_id),
+                internet_access: document.getElementById("switch").checked,
+                content_type: "text",
+                parts: [
+                    {
+                        content: message,
+                        role: "user",
+                    },
+                ],
+            },
+        },
+    }),
+});
 		const reader = response.body.getReader();
 
 		while (true) {
